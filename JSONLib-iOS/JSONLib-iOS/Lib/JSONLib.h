@@ -69,6 +69,7 @@ typedef enum
 - (NSDictionary*)serializeToDictionary:(NSObject<JSONProtocol>*)data error:(NSError**)error;
 - (NSArray*)serializeToArray:(NSArray*)data error:(NSError**)error;
 - (id<JSONProtocol>)deserializeFromDictionary:(NSDictionary*)dictIn itemClass:(Class)itemClass error:(NSError**)error;
+- (NSArray*)deserializeFromArray:(NSArray*)arrIn itemClass:(Class)itemClass error:(NSError**)error;
 
 
 @end
