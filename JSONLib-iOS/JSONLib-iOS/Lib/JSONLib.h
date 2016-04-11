@@ -152,11 +152,12 @@ typedef enum
 
 typedef enum {
     JSONHelperDateTypeNotFound,
-    JSONHelperDateTypeSoapTimestampWithTimezone
+    JSONHelperDateTypeSoapTimestampWithTimezone,
+    JSONHelperDateTypeYYYYMMDDhhmmss
 } JSONHelperDateType;
 
 + (NSString*)fromDateTimeToStringUTC:(NSDate*)dateIn;
-+ (NSDate*)fromStringUTCToDateTime:(NSString*)strIn;
++ (NSDate*)fromStringYYYYMMDDhhmmssToDateTimeUTC:(NSString*)strDate;
 + (NSDate*)fromStringSoapTimestampWithTimezoneToDateTime:(NSString*)strSoap;
 
 + (NSDate*)convertStringToDateUsingAutodetection:(NSString*)strInput;

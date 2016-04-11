@@ -422,17 +422,6 @@
     return stringFromDate;
 }
 
-+ (NSDate*)fromStringUTCToDateTime:(NSString*)strIn
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
-    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    
-    NSDate *date = [formatter dateFromString:strIn];
-    
-    return date;
-}
-
 + (NSDate*)fromStringSoapTimestampWithTimezoneToDateTime:(NSString*)strSoap
 {
     NSDate *dateOut = nil;
@@ -483,12 +472,25 @@
     return dateOut;
 }
 
++ (NSDate*)fromStringYYYYMMDDhhmmssToDateTimeUTC:(NSString*)strDate
+{
+    NSDate *dateOut = nil;
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    dateOut = [dateFormatter dateFromString:strDate];
+    
+    return dateOut;
+}
+
 + (NSDate*)convertStringToDateUsingAutodetection:(NSString*)strInput
 {
     NSDate *dt = nil;
     
     JSONHelperDateType dateType = [JSONHelper detectDateTypeMatch:strInput];
     if(dateType == JSONHelperDateTypeSoapTimestampWithTimezone) dt = [JSONHelper fromStringSoapTimestampWithTimezoneToDateTime:strInput];
+    if(dateType == JSONHelperDateTypeYYYYMMDDhhmmss) dt = [JSONHelper fromStringYYYYMMDDhhmmssToDateTimeUTC:strInput];
     
     return dt;
 }
@@ -504,7 +506,8 @@
 + (NSDictionary*)dateTypesSupported
 {
     return @{
-        [NSNumber numberWithInt:JSONHelperDateTypeSoapTimestampWithTimezone] : @"\\/Date\\(([0-9]*)([+-])([0-9]{2})([0-9]{2})\\)\\/"
+        [NSNumber numberWithInt:JSONHelperDateTypeSoapTimestampWithTimezone] : @"\\/Date\\(([0-9]*)([+-])([0-9]{2})([0-9]{2})\\)\\/",
+        [NSNumber numberWithInt:JSONHelperDateTypeYYYYMMDDhhmmss] : @"\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"
     };
 }
 + (JSONHelperDateType) detectDateTypeMatch:(NSString*)strInput
