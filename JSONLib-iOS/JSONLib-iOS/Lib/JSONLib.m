@@ -152,7 +152,7 @@
 
 - (NSArray*)deserializeFromArray:(NSArray*)arrIn itemClass:(Class)itemClass error:(NSError**)error
 {
-    NSMutableArray *arrOut = nil;
+    NSMutableArray *arrOut = [NSMutableArray array];
     
     *error = nil;
     
@@ -183,6 +183,25 @@
     }
     
     return arrOut;
+}
+
+// from string
+- (id<JSONProtocol>)deserializeStringObject:(NSString*)strJson itemClass:(Class)itemClass error:(NSError**)error
+{
+    NSData *objectData = [strJson dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dictJson = [NSJSONSerialization JSONObjectWithData:objectData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:error];
+    return [self deserializeFromDictionary:dictJson itemClass:itemClass error:error];
+    
+}
+- (NSArray*)deserializeStringArray:(NSString*)strJson itemClass:(Class)itemClass error:(NSError**)error
+{
+    NSData *objectData = [strJson dataUsingEncoding:NSUTF8StringEncoding];
+    NSArray *arrJson = [NSJSONSerialization JSONObjectWithData:objectData
+                                                             options:NSJSONReadingMutableContainers
+                                                               error:error];
+    return [self deserializeFromArray:arrJson itemClass:itemClass error:error];
 }
 
 
@@ -306,7 +325,7 @@
                 break;
             case JSONPropertyTypeDateTime:
             {
-                objValue = [JSONHelper fromStringUTCToDateTime:dictValue];
+                objValue = [JSONHelper convertStringToDateUsingAutodetection:dictValue];
             }
                 break;
             case JSONPropertyTypeBoolean:
@@ -385,7 +404,7 @@
     return date;
 }
 
-+ (NSDate*)fromSoapTimestampWithTimezoneToDateTime:(NSString*)strSoap
++ (NSDate*)fromStringSoapTimestampWithTimezoneToDateTime:(NSString*)strSoap
 {
     NSDate *dateOut = nil;
     
@@ -434,6 +453,59 @@
     
     return dateOut;
 }
+
++ (NSDate*)convertStringToDateUsingAutodetection:(NSString*)strInput
+{
+    NSDate *dt = nil;
+    
+    JSONHelperDateType dateType = [JSONHelper detectDateTypeMatch:strInput];
+    if(dateType == JSONHelperDateTypeSoapTimestampWithTimezone) dt = [JSONHelper fromStringSoapTimestampWithTimezoneToDateTime:strInput];
+    
+    return dt;
+}
+
+
+/**
+ List of all date type formats
+ 
+ Key is JSONHelperDateType
+ 
+ Value is NSString regular expression
+ */
++ (NSDictionary*)dateTypesSupported
+{
+    return @{
+        [NSNumber numberWithInt:JSONHelperDateTypeSoapTimestampWithTimezone] : @"\\/Date\\(([0-9]*)([+-])([0-9]{2})([0-9]{2})\\)\\/"
+    };
+}
++ (JSONHelperDateType) detectDateTypeMatch:(NSString*)strInput
+{
+    NSDictionary *types = [JSONHelper dateTypesSupported];
+
+    JSONHelperDateType typeFound = JSONHelperDateTypeNotFound;
+    
+    for(NSNumber *enumType in types)
+    {
+        NSError *error = NULL;
+        NSString *pattern = [types objectForKey:enumType];
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                               options:NSRegularExpressionCaseInsensitive
+                                                                                 error:&error];
+        if(error == nil)
+        {
+            NSUInteger numberOfMatches = [regex numberOfMatchesInString:strInput
+                                                                options:0
+                                                                  range:NSMakeRange(0, [strInput length])];
+            if(numberOfMatches>0)
+            {
+                typeFound = [enumType intValue];
+            }
+        }
+    }
+    
+    return typeFound;
+}
+
 
 @end
 

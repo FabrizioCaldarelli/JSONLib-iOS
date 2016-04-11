@@ -70,7 +70,8 @@ typedef enum
 - (NSArray*)serializeToArray:(NSArray*)data error:(NSError**)error;
 - (id<JSONProtocol>)deserializeFromDictionary:(NSDictionary*)dictIn itemClass:(Class)itemClass error:(NSError**)error;
 - (NSArray*)deserializeFromArray:(NSArray*)arrIn itemClass:(Class)itemClass error:(NSError**)error;
-
+- (id<JSONProtocol>)deserializeStringObject:(NSString*)strJson itemClass:(Class)itemClass error:(NSError**)error;
+- (NSArray*)deserializeStringArray:(NSString*)strJson itemClass:(Class)itemClass error:(NSError**)error;
 
 @end
 
@@ -113,9 +114,26 @@ typedef enum
  */
 @interface JSONHelper : NSObject
 
+typedef enum {
+    JSONHelperDateTypeNotFound,
+    JSONHelperDateTypeSoapTimestampWithTimezone
+} JSONHelperDateType;
+
 + (NSString*)fromDateTimeToStringUTC:(NSDate*)dateIn;
 + (NSDate*)fromStringUTCToDateTime:(NSString*)strIn;
-+ (NSDate*)fromSoapTimestampWithTimezoneToDateTime:(NSString*)strSoap;
++ (NSDate*)fromStringSoapTimestampWithTimezoneToDateTime:(NSString*)strSoap;
+
++ (NSDate*)convertStringToDateUsingAutodetection:(NSString*)strInput;
+
+/**
+  List of all date type formats
+ 
+  Key is JSONHelperDateType
+ 
+  Value is NSString pattern of regular expression
+*/
++ (NSDictionary*)dateTypesSupported;
++ (JSONHelperDateType) detectDateTypeMatch:(NSString*)strInput;
 
 @end
 

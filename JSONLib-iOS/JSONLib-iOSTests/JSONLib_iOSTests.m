@@ -26,6 +26,42 @@
     [super tearDown];
 }
 
+- (void)testDeserializeArrayFromString
+{
+    NSError *error;
+    
+    NSString *str = @"[{\"name\":\"Albert\", \"surname\":\"Einstein\", \"age\":37}]";
+    
+    JSONManager *jsonManager = [JSONLib defaultManager];
+    NSArray *arr = [jsonManager deserializeStringArray:str itemClass:[SimpleModel class] error:&error];
+    
+    XCTAssertNotNil(arr);
+}
+
+- (void)testDeserializeObjectFromString
+{
+    NSError *error;
+    
+    NSString *str = @"{\"name\":\"Albert\", \"surname\":\"Einstein\", \"age\":37}";
+
+    JSONManager *jsonManager = [JSONLib defaultManager];
+    SimpleModel *model = [jsonManager deserializeStringObject:str itemClass:[SimpleModel class] error:&error];
+    
+    XCTAssertNotNil(model);
+}
+
+- (void)testHelperDateFormat
+{
+    // Create a regular expression
+    NSString *testo = @"/Date(1459850382733-1324)/";
+
+    JSONHelperDateType dtype = [JSONHelper detectDateTypeMatch:testo];
+    
+    NSDate *dt = [JSONHelper convertStringToDateUsingAutodetection:testo];
+    
+    XCTAssertNotNil(dt);
+}
+
 - (NSDictionary*)serializeSimpleModel:(SimpleModel *)simpleModel error:(NSError**)error
 {
     JSONManager *jsonManager = [JSONLib defaultManager];
