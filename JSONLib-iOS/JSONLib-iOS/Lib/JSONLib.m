@@ -47,7 +47,7 @@
 }
 - (NSArray*)serializeToArray:(NSArray*)arrIn error:(NSError**)error
 {
-    NSMutableArray *arrOut = nil;
+    NSMutableArray *arrOut = [NSMutableArray array];
     
     *error = nil;
     
@@ -202,6 +202,35 @@
                                                              options:NSJSONReadingMutableContainers
                                                                error:error];
     return [self deserializeFromArray:arrJson itemClass:itemClass error:error];
+}
+
+
+- (NSString*)serializeToString:(id)data error:(NSError *__autoreleasing *)error
+{
+    NSString *result = nil;
+    
+    id dataToElaborate = nil;
+    
+    if([data isKindOfClass:[NSArray class]])
+    {
+        dataToElaborate = [self serializeToArray:data error:error];
+    }
+    else if([data isKindOfClass:[NSObject class]])
+    {
+        if([data conformsToProtocol:@protocol(JSONProtocol)])
+        {
+            dataToElaborate = [self serializeToDictionary:data error:error];
+        }
+    }
+
+    
+    if(*error == nil)
+    {
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataToElaborate options:NSJSONWritingPrettyPrinted error:error];
+        result = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    
+    return result;
 }
 
 

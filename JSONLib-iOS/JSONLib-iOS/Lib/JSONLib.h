@@ -66,12 +66,48 @@ typedef enum
 /// YES if property has been handled
 @property (nonatomic, copy) BOOL (^deserializeOptionsBlock)(JSONProperty* property, NSDictionary *dictIn, NSObject<JSONProtocol> *objOut);
 
+/**
+ Serialize a NSObject<JSONProtocol> object to NSDictionary (NSString, NSString)
+ @param NSObject<JSONProtocol>*
+ @return NSDictionary key=NSString, value=NSString
+*/
 - (NSDictionary*)serializeToDictionary:(NSObject<JSONProtocol>*)data error:(NSError**)error;
+/**
+ Serialize an array of NSObject<JSONProtocol> object to NSArray of NSDictionary (NSString, NSString)
+ @param NSArray array of NSObject<JSONProtocol>*
+ @return NSArray array of NSDictionary key=NSString, value=NSString
+ */
 - (NSArray*)serializeToArray:(NSArray*)data error:(NSError**)error;
+/**
+ Deserialize a NSDictionary (NSString, NSString) into a NSObject<JSONProtocol> object to
+ @param NSDictionary key=NSString, value=NSString
+ @return NSObject<JSONProtocol>*
+ */
 - (id<JSONProtocol>)deserializeFromDictionary:(NSDictionary*)dictIn itemClass:(Class)itemClass error:(NSError**)error;
+/**
+ Deserialize an NSArray of NSDictionary (NSString, NSString) into an array of NSObject<JSONProtocol> object
+ @param NSArray array of NSDictionary key=NSString, value=NSString
+ @return NSArray array of NSObject<JSONProtocol>*
+ */
 - (NSArray*)deserializeFromArray:(NSArray*)arrIn itemClass:(Class)itemClass error:(NSError**)error;
+/**
+ Deserialize a JSON string into a NSObject<JSONProtocol> object
+ @param NSString JSON string
+ @return NSObject<JSONProtocol>*
+ */
 - (id<JSONProtocol>)deserializeStringObject:(NSString*)strJson itemClass:(Class)itemClass error:(NSError**)error;
+/**
+ Deserialize a JSON string into a NSArray of NSObject<JSONProtocol> objects
+ @param NSString JSON string
+ @return NSArray array of NSObject<JSONProtocol>*
+ */
 - (NSArray*)deserializeStringArray:(NSString*)strJson itemClass:(Class)itemClass error:(NSError**)error;
+/**
+ Serialize a NSObject<JSONProtocol> or NSArray (array of NSObject<JSONProtocol> objects) into a NSString (JSON string)
+ @param id NSObject<JSONProtocol> or NSArray (array of NSObject<JSONProtocol> objects)
+ @return NSString JSON string
+ */
+- (NSString*)serializeToString:(id)data error:(NSError**)error;
 
 @end
 

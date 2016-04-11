@@ -35,6 +35,8 @@
     JSONManager *jsonManager = [JSONLib defaultManager];
     NSArray *arr = [jsonManager deserializeStringArray:str itemClass:[SimpleModel class] error:&error];
     
+    NSString *strOut = [jsonManager serializeToString:arr error:&error];
+    
     XCTAssertNotNil(arr);
 }
 
