@@ -242,7 +242,7 @@
 @implementation JSONProperty
 
 
-+ (JSONProperty*)option:(NSString*)name type:(JSONPropertyType)type itemClass:(Class)itemClass
++ (JSONProperty*)property:(NSString*)name type:(JSONPropertyType)type itemClass:(Class)itemClass
 {
     JSONProperty *obj = [[JSONProperty alloc] init];
     obj.name = name;
@@ -250,9 +250,9 @@
     obj.itemClass = itemClass;
     return obj;
 }
-+ (JSONProperty*)option:(NSString*)name type:(JSONPropertyType)type
++ (JSONProperty*)property:(NSString*)name type:(JSONPropertyType)type
 {
-    return [JSONProperty option:name type:type itemClass:nil];
+    return [JSONProperty property:name type:type itemClass:nil];
 }
 
 - (void)setDictionaryEntry:(NSMutableDictionary*)dictionary fromObject:(NSObject<JSONProtocol>*)object withManager:(JSONManager*)jsonManager error:(NSError**)error

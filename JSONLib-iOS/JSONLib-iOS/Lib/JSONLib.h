@@ -137,8 +137,8 @@ typedef enum
 @property (nonatomic, assign) JSONPropertyType type;
 @property (nonatomic, assign) Class itemClass;
 
-+ (JSONProperty*)option:(NSString*)name type:(JSONPropertyType)type;
-+ (JSONProperty*)option:(NSString*)name type:(JSONPropertyType)type itemClass:(Class)itemClass;
++ (JSONProperty*)property:(NSString*)name type:(JSONPropertyType)type;
++ (JSONProperty*)property:(NSString*)name type:(JSONPropertyType)type itemClass:(Class)itemClass;
 
 - (void)setDictionaryEntry:(NSMutableDictionary*)dictionary fromObject:(NSObject<JSONProtocol>*)object withManager:(JSONManager*)jsonManager error:(NSError**)error;
 - (void)setObjectProperty:(NSObject<JSONProtocol>*)object fromDictionary:(NSDictionary*)dictionary withManager:(JSONManager*)jsonManager error:(NSError**)error;
