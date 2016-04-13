@@ -31,9 +31,9 @@ The JSONProtocol has 1 required method and 2 optionals methods:
         - (NSArray*)JSONProperties
         {
             return @[
-                     [JSONProperty option:@"name" type:JSONPropertyTypeString],
-                     [JSONProperty option:@"surname" type:JSONPropertyTypeString],
-                     [JSONProperty option:@"age" type:JSONPropertyTypeInteger]
+                     [JSONProperty property:@"name" type:JSONPropertyTypeString],
+                     [JSONProperty property:@"surname" type:JSONPropertyTypeString],
+                     [JSONProperty property:@"age" type:JSONPropertyTypeInteger]
                      ];
         }
         @end
